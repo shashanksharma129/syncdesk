@@ -1,0 +1,9 @@
+{
+  "name": "School Helpdesk",
+  "short_name": "Helpdesk",
+  "description": "School communication and helpdesk for parents and staff",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb"
+}

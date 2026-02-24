@@ -1,0 +1,54 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# UV
+.uv/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.npm
+.yarn/
+.pnp.*
+
+# IDE and OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Testing and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Build and dist
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Logs and temp
+*.log
+*.tmp
+.cache/
+
+# Docker
+.docker/

@@ -1,0 +1,52 @@
+# ABOUTME: Runs PostgreSQL and Syncdesk backend for local development.
+# ABOUTME: Use: docker compose up --build
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: syncdesk
+      POSTGRES_PASSWORD: syncdesk
+      POSTGRES_DB: syncdesk
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U syncdesk -d syncdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://syncdesk:syncdesk@db:5432/syncdesk
+      JWT_ACCESS_SECRET: dev-access-secret-min-32-characters-long
+      JWT_REFRESH_SECRET: dev-refresh-secret-min-32-characters-long
+      APP_ENV: development
+      STUB_OTP_CODE: "123456"
+      STUB_OTP_STAFF_CODE: "654321"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

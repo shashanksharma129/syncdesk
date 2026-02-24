@@ -1,6 +1,6 @@
 # Syncdesk — UI & flow bugs
 
-Rigorous testing (code review + browser) against expected behavior for **Parent** and **Staff** personas. Fix in order of severity where possible.
+From code review and expected behavior for **Parent** and **Staff** personas. Fix in order of severity where possible.
 
 ---
 
@@ -26,7 +26,7 @@ Rigorous testing (code review + browser) against expected behavior for **Parent*
 
 ### BUG-004: Guardrails not wired — create ticket always allowed
 - **Where:** `frontend/app/tickets/page.tsx`, `frontend/app/tickets/new/page.tsx`
-- **Expected:** Before/on create, call backend (e.g. guardrail check or rely on POST error) and set `guardrail.blocked` / show GuardrailBanner for max open, cooldown, weekly cap. Disable “Create ticket” / “Continue” when blocked.
+- **Expected:** Before or on create, call backend for guardrail state and set `guardrail.blocked` / show GuardrailBanner for max open, cooldown, weekly cap. Disable “Create ticket” / “Continue” when blocked.
 - **Actual:** `guardrail = { blocked: false }` is hardcoded. User can always click Create ticket and submit; backend may return 400 but UX doesn’t preempt (no banner, no countdown).
 - **Persona:** Parent.
 
@@ -75,12 +75,12 @@ Rigorous testing (code review + browser) against expected behavior for **Parent*
 ### BUG-011: Tickets list — no empty state when API returns []
 - **Where:** `frontend/app/tickets/page.tsx`
 - **Expected:** When `tickets.length === 0` and no filters (or filters applied), show a clear empty state (“No tickets yet” / “No tickets match your filters”) and CTA to create ticket when allowed.
-- **Actual:** Empty state text exists for “filtered” empty; confirm copy and that create CTA is visible when not blocked.
+- **Actual:** Empty state exists for filtered list; ensure copy is clear and create CTA is visible when not blocked.
 
 ### BUG-012: Announcement detail — mark read may fire before 3s on fast navigation
 - **Where:** `frontend/app/announcements/[id]/page.tsx`
 - **Expected:** Mark as read only after viewing for ≥3 seconds (per spec). If user navigates away before 3s, don’t mark read (or cancel timer).
-- **Actual:** Timer is 3s; on quick back-navigation the effect cleanup should clear the timer — verify that `markAnnouncementRead` is not called if user leaves before 3s.
+- **Actual:** Timer is 3s; effect cleanup must clear it so `markAnnouncementRead` is not called if user leaves before 3s.
 
 ---
 
@@ -99,8 +99,8 @@ Rigorous testing (code review + browser) against expected behavior for **Parent*
 
 ### BUG-015: Ticket detail — “Back to tickets” link when not found
 - **Where:** `frontend/app/tickets/[id]/page.tsx`
-- **Expected:** On “Ticket not found”, link back to list. For parent it’s “Back to tickets” (/tickets); for staff ticket detail it’s “Back to inbox” (/staff). Confirm staff detail uses “Back to inbox” (already correct in staff page).
-- **Actual:** Parent detail correctly links to `/tickets`. No issue; kept as consistency check.
+- **Expected:** On “Ticket not found”, link back to list. Parent: “Back to tickets” (/tickets); staff: “Back to inbox” (/staff).
+- **Actual:** Parent links to `/tickets`; staff detail already uses “Back to inbox”. Consistency check only.
 
 ---
 
@@ -119,4 +119,4 @@ Rigorous testing (code review + browser) against expected behavior for **Parent*
 
 ## Testing note
 
-Bugs above were derived from **code review** and expected behavior (spec, backend API, persona). Live **browser UI testing** was attempted (app at http://localhost:3000); the browser MCP did not return snapshot DOM content in this session, so click/type flows could not be driven automatically. **Recommendation:** run manual smoke tests (parent + staff: login → tickets → create → announcements → profile → staff inbox; satisfied/reopen flows) and/or add Playwright E2E and run `npm run test:e2e` to catch any additional UI-only bugs and regressions.
+Bugs are from code review and spec; browser UI was not exercised (MCP snapshot unavailable). Run manual smoke (parent + staff: login → tickets → create → announcements → profile → staff inbox; satisfied/reopen) or Playwright E2E to catch UI-only issues.

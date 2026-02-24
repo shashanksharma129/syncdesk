@@ -1,0 +1,19 @@
+/* ABOUTME: Home page layout and typography. */
+/* ABOUTME: Mobile-first spacing. */
+
+.page {
+  padding: var(--spacing-md, 1rem) 0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm, 0.5rem);
+  color: var(--color-text, #171717);
+}
+
+.lead {
+  font-size: 1rem;
+  color: var(--color-text-muted, #666);
+  line-height: 1.5;
+}

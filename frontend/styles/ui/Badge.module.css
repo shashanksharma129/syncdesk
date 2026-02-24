@@ -1,0 +1,6 @@
+.badge { display: inline-flex; padding: var(--spacing-xs) var(--spacing-sm); font-size: 0.75rem; font-weight: 500; border-radius: var(--radius-sm); }
+.pending { background: rgba(245,158,11,0.15); color: var(--color-status-pending); }
+.in_progress { background: rgba(37,99,235,0.15); color: var(--color-status-in-progress); }
+.resolved { background: rgba(5,150,105,0.15); color: var(--color-status-resolved); }
+.urgent { background: rgba(220,38,38,0.15); color: var(--color-status-urgent); }
+.neutral { background: var(--color-surface); color: var(--color-text-muted); }

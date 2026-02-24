@@ -1,0 +1,5 @@
+.card { display: flex; align-items: center; gap: 0.5rem; padding: var(--spacing-md); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: inherit; }
+.card:hover { background: var(--color-surface); }
+.title { flex: 1; font-weight: 500; }
+.date { font-size: 0.875rem; color: var(--color-text-muted); }
+.attach { font-size: 0.875rem; }

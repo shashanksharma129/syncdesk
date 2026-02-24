@@ -1,0 +1,13 @@
+.wrapper { display: flex; flex-direction: column; gap: 1rem; }
+.back { font-size: 0.875rem; color: var(--color-primary); margin-bottom: 0.25rem; }
+.header { padding-bottom: 0.75rem; border-bottom: 1px solid var(--color-border); }
+.title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+.badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+.assigned, .students { font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+.threadTitle { font-size: 1rem; margin-bottom: 0.5rem; }
+.thread { display: flex; flex-direction: column; gap: 0.75rem; }
+.msgParent { background: var(--color-surface); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-primary); }
+.msgStaff { background: rgba(37,99,235,0.06); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 3px solid var(--color-status-in-progress); }
+.msgMeta { font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.25rem; }
+.msgBody { margin: 0; white-space: pre-wrap; }
+.actions { padding: var(--spacing-md); background: var(--color-surface); border-radius: var(--radius-md); }
