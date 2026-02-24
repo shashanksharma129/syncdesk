@@ -18,16 +18,19 @@ function OtpFormInner() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    if (code.length < 6) {
+    const form = e.currentTarget;
+    const input = form.querySelector<HTMLInputElement>('input[name="otp"], input#otp');
+    const value = (input?.value ?? code).replace(/\D/g, "");
+    if (value.length !== 6) {
       setError("Please enter the 6-digit code we sent you.");
       return;
     }
     setLoading(true);
     try {
-      const { access_token } = await verifyOtp(phone, code);
+      const { access_token } = await verifyOtp(phone, value);
       const me = await fetchMe(access_token);
       login(
         { id: String(me.id), phone: me.phone, role: me.role === "parent" ? "parent" : "staff" },

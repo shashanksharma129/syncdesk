@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/Textarea";
 import { Select } from "@/components/ui/Select";
 import { StudentSelector } from "@/components/StudentSelector";
 import { Alert } from "@/components/ui/Alert";
-import { GuardrailBanner } from "@/components/GuardrailBanner";
+import { GuardrailBanner, type GuardrailState } from "@/components/GuardrailBanner";
 import { CATEGORY_LABELS } from "@/lib/mock-data";
 import { fetchStudents } from "@/services/students";
 import { createTicket } from "@/services/tickets";
@@ -33,6 +33,14 @@ const URGENCY_OPTIONS: { value: TicketUrgency; label: string }[] = [
   { value: "urgent", label: "Urgent" },
 ];
 
+function guardrailReasonFromMessage(msg: string): GuardrailState["reason"] | null {
+  if (/maximum number of open|open tickets/i.test(msg)) return "max_open";
+  if (/wait a few minutes|between creating/i.test(msg)) return "cooldown";
+  if (/limit of tickets per week|per week/i.test(msg)) return "weekly_cap";
+  if (/temporarily unavailable|contact the school/i.test(msg)) return "other";
+  return null;
+}
+
 export default function NewTicketPage() {
   const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
@@ -44,7 +52,7 @@ export default function NewTicketPage() {
   const [urgency, setUrgency] = useState<TicketUrgency>("normal");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const guardrail = { blocked: false };
+  const [guardrail, setGuardrail] = useState<GuardrailState>({ blocked: false });
 
   useEffect(() => {
     fetchStudents().then(setStudents).catch(() => setStudents([]));
@@ -72,7 +80,15 @@ export default function NewTicketPage() {
       setStep("success");
       setTimeout(() => router.push("/tickets"), 2000);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to create ticket.");
+      const msg = e instanceof Error ? e.message : "Failed to create ticket.";
+      const reason = guardrailReasonFromMessage(msg);
+      if (reason) {
+        setGuardrail({ blocked: true, reason });
+        setError("");
+        setStep("form");
+      } else {
+        setError(msg);
+      }
     } finally {
       setSubmitting(false);
     }

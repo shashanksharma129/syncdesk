@@ -65,7 +65,11 @@ export default function TicketsPage() {
         <Select id="child" label="Child" options={childOptions} value={childFilter} onChange={(e) => setChildFilter(e.target.value)} />
       </div>
       {filtered.length === 0 ? (
-        <p style={{ color: "var(--color-text-muted)" }}>No tickets match your filters. You can create a new ticket above.</p>
+        <p style={{ color: "var(--color-text-muted)" }}>
+          {!statusFilter && !childFilter
+            ? "No tickets yet. Create one above when you need help."
+            : "No tickets match your filters. You can create a new ticket above."}
+        </p>
       ) : (
         <div>
           {filtered.map((t) => (

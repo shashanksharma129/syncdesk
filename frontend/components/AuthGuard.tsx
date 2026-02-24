@@ -14,13 +14,19 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const isPublic = PUBLIC_PATHS.some((p) => pathname?.startsWith(p));
 
+  const isStaffPath = pathname?.startsWith("/staff") ?? false;
+
   useEffect(() => {
     if (loading) return;
     if (!user && !isPublic) {
       router.replace("/login");
       return;
     }
-  }, [user, loading, isPublic, router]);
+    if (user && isStaffPath && user.role !== "staff") {
+      router.replace("/");
+      return;
+    }
+  }, [user, loading, isPublic, isStaffPath, router]);
 
   if (loading) {
     return (
@@ -28,6 +34,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
   if (!user && !isPublic) {
+    return null;
+  }
+  if (user && isStaffPath && user.role !== "staff") {
     return null;
   }
   if (isPublic) {

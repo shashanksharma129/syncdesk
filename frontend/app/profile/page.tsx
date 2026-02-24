@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Alert } from "@/components/ui/Alert";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
 import { fetchStudents } from "@/services/students";
 import type { Student } from "@/lib/types";
 
@@ -13,18 +12,11 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const [name, setName] = useState(user?.name || "Parent");
   const [email, setEmail] = useState("parent@example.com");
-  const [saved, setSaved] = useState(false);
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
     fetchStudents().then(setStudents).catch(() => setStudents([]));
   }, []);
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
@@ -32,12 +24,11 @@ export default function ProfilePage() {
       <p style={{ color: "var(--color-text-muted)", fontSize: "0.875rem" }}>
         Logged in as: <strong>{user?.role === "staff" ? "Staff" : "Parent"}</strong>
       </p>
-      <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1rem", maxWidth: "20rem" }}>
-        <Input id="name" label="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <Input id="email" label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Button type="submit" variant="primary">Save changes</Button>
-        {saved && <Alert variant="success">Saved.</Alert>}
-      </form>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxWidth: "20rem" }}>
+        <Input id="name" label="Name" value={name} onChange={(e) => setName(e.target.value)} disabled />
+        <Input id="email" label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled />
+        <Alert variant="info">Profile updates coming soon. Name and email are read-only for now.</Alert>
+      </div>
       <p style={{ color: "var(--color-text-muted)" }}>Phone: {user?.phone ?? "—"}</p>
       {user?.role === "staff" && (
         <p><a href="/staff" style={{ color: "var(--color-primary)", fontSize: "0.875rem" }}>Staff inbox</a></p>

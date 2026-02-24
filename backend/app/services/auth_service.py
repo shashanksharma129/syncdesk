@@ -79,8 +79,12 @@ async def verify_otp_and_issue_token(
         user = User(phone=phone, role=role, school_id=settings.default_school_id)
         session.add(user)
         await session.flush()
-    elif stub_staff_ok and user.role == Role.PARENT:
-        user.role = Role.TEACHER
-        await session.flush()
+    else:
+        if stub_staff_ok and user.role == Role.PARENT:
+            user.role = Role.TEACHER
+            await session.flush()
+        elif stub_ok and user.role != Role.PARENT:
+            user.role = Role.PARENT
+            await session.flush()
     token = create_access_token(user.id, user.role, user.school_id)
     return (user, token)

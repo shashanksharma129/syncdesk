@@ -25,7 +25,7 @@ function toTicket(t: TicketApi): Ticket {
     title: t.title ?? "",
     created_at: t.created_at,
     updated_at: t.updated_at,
-    assigned_role: undefined,
+    assigned_role: t.assigned_to_id != null ? "Assigned" : undefined,
     student_ids: t.student_ids.map(String),
     messages: t.messages.map((m) => ({
       id: String(m.id),
@@ -87,5 +87,18 @@ export async function addInternalNote(ticketId: string, body: string): Promise<v
   await fetchApi<{ message?: string }>(`/tickets/${ticketId}/internal-notes`, {
     method: "POST",
     body: JSON.stringify({ body }),
+  });
+}
+
+export async function markSatisfied(ticketId: string): Promise<void> {
+  await fetchApi<{ message?: string }>(`/tickets/${ticketId}/satisfied`, {
+    method: "POST",
+  });
+}
+
+export async function reopenTicket(ticketId: string, reason: string): Promise<void> {
+  await fetchApi<{ id?: number; message?: string }>(`/tickets/${ticketId}/reopen`, {
+    method: "POST",
+    body: JSON.stringify({ reason }),
   });
 }
