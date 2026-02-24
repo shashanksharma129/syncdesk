@@ -25,7 +25,7 @@ function toTicket(t: TicketApi): Ticket {
     title: t.title ?? "",
     created_at: t.created_at,
     updated_at: t.updated_at,
-    assigned_role: t.assigned_to_id != null ? undefined : undefined,
+    assigned_role: undefined,
     student_ids: t.student_ids.map(String),
     messages: t.messages.map((m) => ({
       id: String(m.id),

@@ -1,4 +1,4 @@
-// ABOUTME: API client for backend; will be wired in Prompt 18.
+// ABOUTME: API client for backend; base URL from env or localhost.
 const getBaseUrl = () =>
   (typeof window !== "undefined" && (process.env.NEXT_PUBLIC_API_URL || "")) || "http://localhost:8000";
 
